@@ -3,6 +3,7 @@ import Category from '../models/Category.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { buildExpenseQuery } from '../utils/expenseQuery.js';
+import { roundMoney } from '../utils/money.js';
 
 const EDITABLE_FIELDS = ['title', 'amount', 'category', 'date', 'paymentMethod', 'notes'];
 
@@ -43,7 +44,7 @@ export const listExpenses = asyncHandler(async (req, res) => {
       total,
       totalPages: Math.max(1, Math.ceil(total / limit)),
     },
-    totalAmount: totals[0]?.sum ?? 0,
+    totalAmount: roundMoney(totals[0]?.sum ?? 0),
   });
 });
 

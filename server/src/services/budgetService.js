@@ -1,6 +1,7 @@
 import Budget from '../models/Budget.js';
 import Expense from '../models/Expense.js';
 import { monthRange } from '../utils/month.js';
+import { roundMoney } from '../utils/money.js';
 
 // Share of the budget at which a user is "approaching" their limit
 export const APPROACHING_THRESHOLD = 0.8;
@@ -28,14 +29,14 @@ export async function getBudgetSummary(userId, month) {
   ]);
 
   const amount = budget?.amount ?? 0;
-  const spent = totals[0]?.spent ?? 0;
+  const spent = roundMoney(totals[0]?.spent ?? 0);
 
   return {
     month: range.month,
     budget: amount,
     hasBudget: Boolean(budget),
     spent,
-    remaining: budget ? amount - spent : 0,
+    remaining: budget ? roundMoney(amount - spent) : 0,
     percentUsed: amount > 0 ? Math.round((spent / amount) * 1000) / 10 : 0,
     expenseCount: totals[0]?.count ?? 0,
     status: budgetStatus(budget ? amount : 0, spent),

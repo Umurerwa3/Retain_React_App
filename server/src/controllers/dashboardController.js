@@ -2,6 +2,7 @@ import Expense from '../models/Expense.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { monthRange } from '../utils/month.js';
 import { getBudgetSummary } from '../services/budgetService.js';
+import { roundMoney } from '../utils/money.js';
 
 // GET /api/dashboard?month=YYYY-MM
 export const getDashboard = asyncHandler(async (req, res) => {
@@ -49,8 +50,8 @@ export const getDashboard = asyncHandler(async (req, res) => {
     expenseCount: budget.expenseCount,
     budget,
     highestExpense,
-    spendingByCategory: byCategory,
-    dailySpending: daily,
+    spendingByCategory: byCategory.map((c) => ({ ...c, total: roundMoney(c.total) })),
+    dailySpending: daily.map((d) => ({ ...d, total: roundMoney(d.total) })),
     recentExpenses,
   });
 });

@@ -3,6 +3,7 @@ import Expense from '../models/Expense.js';
 import User from '../models/User.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import { monthRange } from '../utils/month.js';
+import { roundMoney } from '../utils/money.js';
 
 const RECENT_LIMIT = 5;
 
@@ -32,7 +33,7 @@ export const getInsights = asyncHandler(async (req, res) => {
     categoryId: c._id,
     name: c.name,
     color: c.color,
-    total: usageById.get(String(c._id))?.total ?? 0,
+    total: roundMoney(usageById.get(String(c._id))?.total ?? 0),
     count: usageById.get(String(c._id))?.count ?? 0,
   }));
 
@@ -41,7 +42,7 @@ export const getInsights = asyncHandler(async (req, res) => {
   res.json({
     totalUsers,
     totalExpenses,
-    totalValue: totals[0]?.sum ?? 0,
+    totalValue: roundMoney(totals[0]?.sum ?? 0),
     expensesThisMonth,
     spendingPerCategory: [...categoryStats].sort((a, b) => b.total - a.total),
     topCategories: byUsage.slice(0, 5),

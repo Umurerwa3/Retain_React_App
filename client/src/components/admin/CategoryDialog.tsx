@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import {
   Alert,
   Box,
@@ -25,17 +25,20 @@ interface CategoryDialogProps {
 const emptyForm: CategoryInput = { name: '', description: '', color: SWATCHES[0] };
 
 export default function CategoryDialog({ open, category, onClose, onSave }: CategoryDialogProps) {
-  const [values, setValues] = useState<CategoryInput>(emptyForm);
+  // The form lives inside the dialog, so it is remounted (and reset) every time the dialog opens
+  return (
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <CategoryForm category={category} onClose={onClose} onSave={onSave} />
+    </Dialog>
+  );
+}
+
+function CategoryForm({ category, onClose, onSave }: Omit<CategoryDialogProps, 'open'>) {
+  const [values, setValues] = useState<CategoryInput>(() =>
+    category ? { name: category.name, description: category.description, color: category.color } : emptyForm
+  );
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setValues(category ? { name: category.name, description: category.description, color: category.color } : emptyForm);
-      setError(null);
-      setSaving(false);
-    }
-  }, [open, category]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,8 +57,7 @@ export default function CategoryDialog({ open, category, onClose, onSave }: Cate
   };
 
   return (
-    <Dialog open={open} onClose={saving ? undefined : onClose} fullWidth maxWidth="sm">
-      <Box component="form" onSubmit={handleSubmit} noValidate>
+    <Box component="form" onSubmit={handleSubmit} noValidate>
         <DialogTitle>{category ? 'Edit category' : 'New category'}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ pt: 1 }}>
@@ -112,7 +114,6 @@ export default function CategoryDialog({ open, category, onClose, onSave }: Cate
             {saving ? 'Saving…' : 'Save'}
           </Button>
         </DialogActions>
-      </Box>
-    </Dialog>
+    </Box>
   );
 }

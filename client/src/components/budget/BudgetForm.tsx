@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Button, InputAdornment, Stack, TextField } from '@mui/material';
 import { currencySymbol } from '../../utils/format';
 
@@ -8,14 +8,10 @@ interface BudgetFormProps {
   onSave: (amount: number) => void;
 }
 
+/** Remount with a new `key` to reset the field when the month or saved amount changes. */
 export default function BudgetForm({ currentAmount, saving, onSave }: BudgetFormProps) {
   const [value, setValue] = useState(currentAmount ? String(currentAmount) : '');
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setValue(currentAmount ? String(currentAmount) : '');
-    setError(null);
-  }, [currentAmount]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

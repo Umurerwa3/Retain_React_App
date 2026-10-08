@@ -119,7 +119,9 @@ export default function BudgetPage() {
 
                   <BudgetProgress summary={data} />
 
-                  <BudgetForm currentAmount={data.hasBudget ? data.budget : null} saving={saving} onSave={handleSave} />
+                  <BudgetForm
+                    key={`${data.month}:${data.budget}`}
+                    currentAmount={data.hasBudget ? data.budget : null} saving={saving} onSave={handleSave} />
 
                   {data.hasBudget && (
                     <Button color="error" onClick={() => setConfirmOpen(true)} sx={{ alignSelf: 'flex-start' }}>

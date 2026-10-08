@@ -14,12 +14,13 @@ const CATEGORIES = [
 
 /**
  * Creates the default categories and the admin account if they are missing.
- * Idempotent: existing records are left untouched.
+ * Safe to run on every start: nothing is overwritten or re-created once it exists.
  */
 export async function seedData() {
   await Category.getDefault();
-  for (const category of CATEGORIES) {
-    await Category.updateOne({ name: category.name }, { $setOnInsert: category }, { upsert: true });
+  // Starter categories are only added to a fresh database, so ones an admin deletes stay deleted
+  if ((await Category.countDocuments({ isDefault: false })) === 0) {
+    await Category.insertMany(CATEGORIES);
   }
   console.log(`Categories ready (${await Category.countDocuments()})`);
 

@@ -22,7 +22,7 @@ export const createCategory = asyncHandler(async (req, res) => {
 // PUT /api/categories/:id (admin)
 export const updateCategory = asyncHandler(async (req, res) => {
   const category = await Category.findByIdAndUpdate(req.params.id, pick(req.body), {
-    new: true,
+    returnDocument: 'after',
     runValidators: true,
   });
   if (!category) throw ApiError.notFound('Category not found');

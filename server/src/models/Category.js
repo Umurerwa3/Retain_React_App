@@ -40,7 +40,7 @@ categorySchema.statics.getDefault = async function getDefault() {
   return this.findOneAndUpdate(
     { isDefault: true },
     { $setOnInsert: { name: DEFAULT_CATEGORY_NAME, isDefault: true, description: 'Expenses without a category' } },
-    { upsert: true, new: true }
+    { upsert: true, returnDocument: 'after' }
   );
 };
 

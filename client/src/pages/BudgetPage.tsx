@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router';
 import {
   Alert,
   Button,
@@ -26,8 +25,6 @@ import { currentMonthValue, formatCurrency, formatMonth } from '../utils/format'
 
 export default function BudgetPage() {
   const notify = useNotify();
-  const location = useLocation();
-  const isWelcome = Boolean((location.state as { welcome?: boolean } | null)?.welcome);
 
   const [month, setMonth] = useState(currentMonthValue);
   const [saving, setSaving] = useState(false);
@@ -69,12 +66,6 @@ export default function BudgetPage() {
   return (
     <>
       <PageHeader title="Budget" subtitle="Set a monthly spending limit and see how you are tracking." />
-
-      {isWelcome && (
-        <Alert severity="success" sx={{ mb: 2 }}>
-          Welcome to Retain! Start by setting a budget for this month.
-        </Alert>
-      )}
 
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 8 }}>

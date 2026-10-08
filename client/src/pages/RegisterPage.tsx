@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 import { Alert, Button, Link, Stack, TextField, Typography } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import PasswordField from '../components/auth/PasswordField';
@@ -26,7 +26,6 @@ function validate(values: FormState): FormErrors {
 
 export default function RegisterPage() {
   const { signUp } = useAuth();
-  const navigate = useNavigate();
 
   const [values, setValues] = useState<FormState>({ name: '', email: '', password: '', confirmPassword: '' });
   const [errors, setErrors] = useState<FormErrors>({});
@@ -45,8 +44,8 @@ export default function RegisterPage() {
     setServerError(null);
     setSubmitting(true);
     try {
+      // GuestRoute redirects to the dashboard once the session exists
       await signUp({ name: values.name.trim(), email: values.email.trim(), password: values.password });
-      navigate('/budget', { replace: true, state: { welcome: true } });
     } catch (err) {
       setServerError(getErrorMessage(err));
       setSubmitting(false);

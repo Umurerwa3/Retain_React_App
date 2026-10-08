@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link as RouterLink, useLocation, useNavigate, type Location } from 'react-router';
+import { Link as RouterLink } from 'react-router';
 import { Alert, Button, Link, Stack, TextField, Typography } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import PasswordField from '../components/auth/PasswordField';
@@ -8,9 +8,6 @@ import { getErrorMessage } from '../api/client';
 
 export default function LoginPage() {
   const { signIn } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = (location.state as { from?: Location } | null)?.from?.pathname ?? '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,8 +19,8 @@ export default function LoginPage() {
     setError(null);
     setSubmitting(true);
     try {
-      const user = await signIn({ email: email.trim(), password });
-      navigate(from === '/' && user.role === 'admin' ? '/admin' : from, { replace: true });
+      // GuestRoute redirects once the session exists
+      await signIn({ email: email.trim(), password });
     } catch (err) {
       setError(getErrorMessage(err));
       setSubmitting(false);

@@ -6,6 +6,8 @@ import EmptyState from '../components/common/EmptyState';
 import ExpenseTable from '../components/expenses/ExpenseTable';
 import ExpenseCardList from '../components/expenses/ExpenseCardList';
 import ExpensePagination from '../components/expenses/ExpensePagination';
+import ExpenseFilters from '../components/expenses/ExpenseFilters';
+import { useCategories } from '../hooks/useCategories';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectExpenseQueryParams, selectFilters, setLimit, setPage, setSort } from '../store/slices/filtersSlice';
 import { useFetch } from '../hooks/useFetch';
@@ -20,6 +22,7 @@ export default function ExpensesPage() {
   const filters = useAppSelector(selectFilters);
   const params = useAppSelector(selectExpenseQueryParams);
 
+  const { categories } = useCategories();
   const { data, loading, error, refetch } = useFetch((signal) => expenseApi.list(params, signal), [params]);
 
   const handleSort = (field: SortField) => {
@@ -40,6 +43,8 @@ export default function ExpensesPage() {
         subtitle={data ? `${data.pagination.total} expense(s) · ${formatCurrency(data.totalAmount)} total` : 'Your recorded spending'}
         actions={addButton}
       />
+
+      <ExpenseFilters categories={categories} />
 
       <Card>
         {loading && <LinearProgress />}

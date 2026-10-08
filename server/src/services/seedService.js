@@ -32,6 +32,8 @@ export async function seedData() {
       await existing.save();
     }
     console.log(`Admin account exists: ${email}`);
+  } else if (process.env.NODE_ENV === 'production' && !process.env.ADMIN_PASSWORD) {
+    console.warn('ADMIN_PASSWORD is not set: skipping admin account creation');
   } else {
     await User.create({
       name: process.env.ADMIN_NAME || 'Retain Admin',

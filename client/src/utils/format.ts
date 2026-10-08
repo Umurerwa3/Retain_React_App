@@ -10,6 +10,10 @@ const currencyFormatter = new Intl.NumberFormat(undefined, {
 
 export const formatCurrency = (value: number) => currencyFormatter.format(value);
 
+/** Symbol of the configured currency, e.g. "$" or "RF" */
+export const currencySymbol =
+  currencyFormatter.formatToParts(0).find((part) => part.type === 'currency')?.value ?? CURRENCY;
+
 /**
  * Formats an ISO date for display. Expense dates are calendar days stored at UTC midnight,
  * so they are shown in UTC to avoid slipping to the previous day in western time zones.

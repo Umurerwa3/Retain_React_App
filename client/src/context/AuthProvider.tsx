@@ -3,15 +3,21 @@ import { authApi } from '../api/authApi';
 import { onUnauthorized, tokenStorage } from '../api/client';
 import type { AuthResponse, Credentials, Role, SignUpData, User } from '../types';
 import { AuthContext, type AuthContextValue } from './authContext';
+import { useAppDispatch } from '../store/hooks';
+import { resetFilters } from '../store/slices/filtersSlice';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [initializing, setInitializing] = useState<boolean>(() => Boolean(tokenStorage.get()));
 
+  const dispatch = useAppDispatch();
+
   const signOut = useCallback(() => {
     tokenStorage.clear();
     setUser(null);
-  }, []);
+    // Don't carry one user's expense filters over to the next account
+    dispatch(resetFilters());
+  }, [dispatch]);
 
   // Restore the session from a stored token
   useEffect(() => {

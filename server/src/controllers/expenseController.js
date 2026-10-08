@@ -2,6 +2,7 @@ import Expense from '../models/Expense.js';
 import Category from '../models/Category.js';
 import ApiError from '../utils/ApiError.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import { buildExpenseQuery } from '../utils/expenseQuery.js';
 
 const EDITABLE_FIELDS = ['title', 'amount', 'category', 'date', 'paymentMethod', 'notes'];
 
@@ -24,10 +25,26 @@ async function findOwnExpense(req) {
   return expense;
 }
 
-// GET /api/expenses
+// GET /api/expenses?search=&category=&paymentMethod=&startDate=&endDate=&minAmount=&maxAmount=&sortBy=&order=&page=&limit=
 export const listExpenses = asyncHandler(async (req, res) => {
-  const expenses = await Expense.find({ user: req.user._id }).sort({ date: -1 }).populate('category');
-  res.json({ expenses });
+  const { filter, sort, page, limit, skip } = buildExpenseQuery(req.user._id, req.query);
+
+  const [expenses, total, totals] = await Promise.all([
+    Expense.find(filter).sort(sort).skip(skip).limit(limit).populate('category'),
+    Expense.countDocuments(filter),
+    Expense.aggregate([{ $match: filter }, { $group: { _id: null, sum: { $sum: '$amount' } } }]),
+  ]);
+
+  res.json({
+    expenses,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.max(1, Math.ceil(total / limit)),
+    },
+    totalAmount: totals[0]?.sum ?? 0,
+  });
 });
 
 // GET /api/expenses/:id

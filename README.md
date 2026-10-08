@@ -9,7 +9,12 @@ Retain helps people record their everyday expenses, set a monthly budget and see
 | **Web app** | _coming soon – deployment link will be added here_ |
 | **API** | _coming soon_ |
 
-Demo admin account (created by the seed script): `admin@retain.app` / `admin123`. Change it in production with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` variables.
+| Account | Email | Password |
+|---|---|---|
+| Admin | `admin@retain.app` | set with `ADMIN_PASSWORD` (`admin123` locally) |
+| Demo user | `demo@retain.app` | `demo1234` |
+
+The demo user has about three months of expenses and budgets: one month within budget, one over, and the current month approaching the limit. Load this data with `npm run seed:demo` (see below).
 
 ## Features
 
@@ -124,6 +129,7 @@ npm run dev               # http://localhost:5173
 | `server` | `npm run dev` | Start the API with auto reload |
 | `server` | `npm start` | Start the API |
 | `server` | `npm run seed` | Create default categories and the admin account |
+| `server` | `npm run seed:demo` | Reset and load the demo users, expenses and budgets |
 | `client` | `npm run dev` | Start the Vite dev server |
 | `client` | `npm run build` | Type-check and build for production |
 | `client` | `npm run lint` | Lint with oxlint |
@@ -163,6 +169,7 @@ The repo includes a [Render Blueprint](render.yaml) that deploys both services:
    - `retain-api`: set `MONGO_URI`, `CLIENT_URL` (the client URL), `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
    - `retain-client`: set `VITE_API_URL` to `https://<retain-api>.onrender.com/api`.
 4. Deploy. The API seeds the categories and the admin account on first start.
+5. Optional: load demo data into the production database from your machine with `MONGO_URI="<atlas uri>" npm run seed:demo` in `server/`.
 
 `client/vercel.json` is included if you'd rather host the frontend on Vercel.
 

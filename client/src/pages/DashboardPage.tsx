@@ -11,6 +11,8 @@ import EmptyState from '../components/common/EmptyState';
 import StatCard from '../components/dashboard/StatCard';
 import CategoryBreakdown from '../components/dashboard/CategoryBreakdown';
 import RecentExpenses from '../components/dashboard/RecentExpenses';
+import CategoryDonut from '../components/dashboard/CategoryDonut';
+import DailySpendingChart from '../components/dashboard/DailySpendingChart';
 import BudgetProgress from '../components/budget/BudgetProgress';
 import MonthPicker from '../components/budget/MonthPicker';
 import { useAuth } from '../hooks/useAuth';
@@ -113,6 +115,19 @@ export default function DashboardPage() {
             </Card>
           </Grid>
 
+          {data.dailySpending.length > 0 && (
+            <Grid size={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" component="h2" gutterBottom>
+                    Daily spending
+                  </Typography>
+                  <DailySpendingChart month={month} data={data.dailySpending} />
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
+
           <Grid size={{ xs: 12, md: 7 }}>
             <Card sx={{ height: '100%' }}>
               <CardContent>
@@ -120,7 +135,14 @@ export default function DashboardPage() {
                   Spending by category
                 </Typography>
                 {data.spendingByCategory.length ? (
-                  <CategoryBreakdown data={data.spendingByCategory} />
+                  <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+                    <Grid size={{ xs: 12, sm: 5 }}>
+                      <CategoryDonut data={data.spendingByCategory} />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 7 }}>
+                      <CategoryBreakdown data={data.spendingByCategory} />
+                    </Grid>
+                  </Grid>
                 ) : (
                   <EmptyState title="No spending this month" description="Expenses you record will be grouped here." />
                 )}

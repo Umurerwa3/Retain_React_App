@@ -32,6 +32,13 @@ import { useDebouncedValue } from '../../hooks/useDebouncedValue';
 import { PAYMENT_METHOD_LABELS } from '../../utils/format';
 import { PAYMENT_METHODS, type Category, type PaymentMethod, type SortField, type SortOrder } from '../../types';
 
+/** MUI multi-selects report their value as string[] (or a comma string on autofill). */
+const toList = (value: unknown): string[] =>
+  Array.isArray(value) ? value.map(String) : String(value).split(',').filter(Boolean);
+
+const isPaymentMethod = (value: string): value is PaymentMethod =>
+  (PAYMENT_METHODS as readonly string[]).includes(value);
+
 const SORT_OPTIONS: { value: `${SortField}:${SortOrder}`; label: string }[] = [
   { value: 'date:desc', label: 'Newest first' },
   { value: 'date:asc', label: 'Oldest first' },
@@ -137,10 +144,7 @@ export default function ExpenseFilters({ categories }: { categories: Category[] 
                 select
                 label="Categories"
                 value={filters.categories}
-                onChange={(e) => {
-                  const value = e.target.value as unknown as string[] | string;
-                  dispatch(setCategories(typeof value === 'string' ? value.split(',') : value));
-                }}
+                onChange={(e) => dispatch(setCategories(toList(e.target.value)))}
                 slotProps={{
                   select: {
                     multiple: true,
@@ -161,10 +165,7 @@ export default function ExpenseFilters({ categories }: { categories: Category[] 
                 select
                 label="Payment methods"
                 value={filters.paymentMethods}
-                onChange={(e) => {
-                  const value = e.target.value as unknown as PaymentMethod[] | string;
-                  dispatch(setPaymentMethods(typeof value === 'string' ? (value.split(',') as PaymentMethod[]) : value));
-                }}
+                onChange={(e) => dispatch(setPaymentMethods(toList(e.target.value).filter(isPaymentMethod)))}
                 slotProps={{
                   select: {
                     multiple: true,

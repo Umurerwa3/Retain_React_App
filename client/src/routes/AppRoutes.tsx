@@ -12,6 +12,7 @@ import AdminDashboardPage from '../pages/admin/AdminDashboardPage';
 import AdminCategoriesPage from '../pages/admin/AdminCategoriesPage';
 import ForbiddenPage from '../pages/ForbiddenPage';
 import NotFoundPage from '../pages/NotFoundPage';
+import AppLayout from '../components/layout/AppLayout';
 
 export default function AppRoutes() {
   return (
@@ -22,18 +23,20 @@ export default function AppRoutes() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/expenses" element={<ExpensesPage />} />
-        <Route path="/expenses/new" element={<ExpenseFormPage />} />
-        <Route path="/expenses/:id" element={<ExpenseDetailsPage />} />
-        <Route path="/expenses/:id/edit" element={<ExpenseFormPage />} />
-        <Route path="/budget" element={<BudgetPage />} />
-        <Route path="/forbidden" element={<ForbiddenPage />} />
-      </Route>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/expenses" element={<ExpensesPage />} />
+          <Route path="/expenses/new" element={<ExpenseFormPage />} />
+          <Route path="/expenses/:id" element={<ExpenseDetailsPage />} />
+          <Route path="/expenses/:id/edit" element={<ExpenseFormPage />} />
+          <Route path="/budget" element={<BudgetPage />} />
+          <Route path="/forbidden" element={<ForbiddenPage />} />
 
-      <Route element={<ProtectedRoute roles={['admin']} />}>
-        <Route path="/admin" element={<AdminDashboardPage />} />
-        <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          <Route element={<ProtectedRoute roles={['admin']} />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/categories" element={<AdminCategoriesPage />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

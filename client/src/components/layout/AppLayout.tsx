@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Outlet } from 'react-router';
-import { AppBar, Box, Drawer, IconButton, Toolbar } from '@mui/material';
+import { AppBar, Box, Drawer, IconButton, LinearProgress, Toolbar } from '@mui/material';
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import SideNav from './SideNav';
 import UserMenu from './UserMenu';
@@ -60,7 +60,10 @@ export default function AppLayout() {
       <Box component="main" sx={{ flexGrow: 1, minWidth: 0, p: { xs: 2, sm: 3 } }}>
         <Toolbar />
         <Box sx={{ maxWidth: 1200, mx: 'auto' }}>
-          <Outlet />
+          {/* Keep the shell visible while a lazy page loads */}
+          <Suspense fallback={<LinearProgress />}>
+            <Outlet />
+          </Suspense>
         </Box>
       </Box>
     </Box>

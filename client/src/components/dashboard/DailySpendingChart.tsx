@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Box, useTheme } from '@mui/material';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { formatCurrency, formatDate, monthBounds } from '../../utils/format';
+import { formatCompactCurrency, formatCurrency, formatDate, monthBounds } from '../../utils/format';
 import type { DailySpending } from '../../types';
 
 interface DailySpendingChartProps {
@@ -29,7 +29,7 @@ export default function DailySpendingChart({ month, data }: DailySpendingChartPr
         <BarChart data={series} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.palette.divider} />
           <XAxis dataKey="day" tickLine={false} axisLine={false} interval="preserveStartEnd" fontSize={12} />
-          <YAxis tickLine={false} axisLine={false} width={56} fontSize={12} tickFormatter={(v: number) => formatCurrency(v)} />
+          <YAxis tickLine={false} axisLine={false} width={72} fontSize={12} tickFormatter={(v: number) => formatCompactCurrency(v)} />
           <Tooltip
             formatter={(value) => [formatCurrency(Number(value)), 'Spent']}
             labelFormatter={(_, payload) => (payload?.[0] ? formatDate(`${payload[0].payload.date}T00:00:00Z`) : '')}

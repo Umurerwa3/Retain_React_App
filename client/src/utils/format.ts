@@ -22,6 +22,16 @@ export const roundAmount = (value: number) => {
 
 export const formatCurrency = (value: number) => currencyFormatter.format(value);
 
+const compactFormatter = new Intl.NumberFormat(undefined, {
+  style: 'currency',
+  currency: CURRENCY,
+  notation: 'compact',
+  maximumFractionDigits: 1,
+});
+
+/** Short form for chart axes, e.g. "RWF 200K" */
+export const formatCompactCurrency = (value: number) => compactFormatter.format(value);
+
 /** Symbol of the configured currency, e.g. "$" or "RF" */
 export const currencySymbol =
   currencyFormatter.formatToParts(0).find((part) => part.type === 'currency')?.value ?? CURRENCY;

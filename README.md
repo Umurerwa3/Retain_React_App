@@ -14,7 +14,7 @@ Retain helps people record their everyday expenses, set a monthly budget and see
 | Admin | `admin@retain.app` | set with `ADMIN_PASSWORD` (`admin123` locally) |
 | Demo user | `demo@retain.app` | `demo1234` |
 
-The demo user has about three months of expenses and budgets: one month within budget, one over, and the current month approaching the limit. Load this data with `npm run seed:demo` (see below).
+The demo user has 69 expenses across August to October: August is within budget, September is over budget, and October is approaching the limit. Load this data with `npm run seed:demo` (see below).
 
 ## Features
 
@@ -108,6 +108,7 @@ npm run dev               # http://localhost:5000
 | `JWT_EXPIRES_IN` | Token lifetime | `7d` |
 | `CLIENT_URL` | Allowed CORS origin(s), comma separated | `*` |
 | `ADMIN_NAME` / `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Admin account created by the seed | `Retain Admin` / `admin@retain.app` / `admin123` |
+| `DEMO_PASSWORD` | Demo user password used by the `seed:demo` script | `demo1234` |
 
 ### 3. Frontend
 ```bash
@@ -166,7 +167,7 @@ The repo includes a [Render Blueprint](render.yaml) that deploys both services:
 1. Create a free MongoDB Atlas cluster and copy its connection string.
 2. On Render, choose **New → Blueprint** and select this repository.
 3. Fill in the secrets:
-   - `retain-api`: set `MONGO_URI`, `CLIENT_URL` (the client URL), `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
+   - `retain-api`: set `MONGO_URI`, `CLIENT_URL` (the client URL), `ADMIN_NAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `DEMO_PASSWORD`.
    - `retain-client`: set `VITE_API_URL` to `https://<retain-api>.onrender.com/api`.
 4. Deploy. The API seeds the categories and the admin account on first start.
 5. Optional: load demo data into the production database from your machine with `MONGO_URI="<atlas uri>" npm run seed:demo` in `server/`.

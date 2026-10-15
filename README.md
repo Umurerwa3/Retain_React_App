@@ -6,12 +6,14 @@ Retain helps people record their everyday expenses, set a monthly budget and see
 
 | | URL |
 |---|---|
-| **Web app** | _coming soon – deployment link will be added here_ |
-| **API** | _coming soon_ |
+| **Web app** | https://retain-client.onrender.com |
+| **API** | https://retain-api-h8ii.onrender.com/api (health check: [`/api/health`](https://retain-api-h8ii.onrender.com/api/health)) |
+
+> Hosted on Render's free tier: if the app hasn't been used for a while, the first request can take up to a minute while the API wakes up.
 
 | Account | Email | Password |
 |---|---|---|
-| Admin | `admin@retain.app` | set with `ADMIN_PASSWORD` (`admin123` locally) |
+| Admin | `admin@retain.app` | shared with graders separately (`admin123` locally) |
 | Demo user | `demo@retain.app` | `demo1234` |
 
 The demo user has 69 expenses across August to October: August is within budget, September is over budget, and October is approaching the limit. Load this data with `npm run seed:demo` (see below).

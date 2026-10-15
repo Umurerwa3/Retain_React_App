@@ -27,43 +27,43 @@ const EXTRA_USERS = [
   { name: 'Eric Habimana', email: 'eric@demo.retain.app' },
 ];
 
-// [title, min, max, payment methods, optional notes] per category
+// [title, min, max (RWF), payment methods, optional notes] per category
 const TEMPLATES = {
   'Food & Dining': [
-    ['Groceries at Simba', 25, 80, ['debit_card', 'mobile_money'], 'Weekly shop'],
-    ['Lunch with friends', 8, 25, ['cash', 'mobile_money']],
-    ['Coffee', 3, 6, ['cash', 'mobile_money']],
-    ['Pizza night', 15, 35, ['credit_card']],
+    ['Groceries at Simba', 15000, 60000, ['debit_card', 'mobile_money'], 'Weekly shop'],
+    ['Lunch with friends', 3000, 10000, ['cash', 'mobile_money']],
+    ['Coffee', 1500, 3500, ['cash', 'mobile_money']],
+    ['Pizza night', 10000, 25000, ['credit_card']],
   ],
   Transport: [
-    ['Moto to campus', 1, 3, ['cash', 'mobile_money']],
-    ['Bus card top-up', 5, 15, ['mobile_money']],
-    ['Fuel', 20, 50, ['debit_card', 'cash']],
-    ['Taxi to airport', 15, 30, ['mobile_money', 'credit_card'], 'Weekend trip'],
+    ['Moto to campus', 500, 1500, ['cash', 'mobile_money']],
+    ['Bus card top-up', 2000, 10000, ['mobile_money']],
+    ['Fuel', 20000, 50000, ['debit_card', 'cash']],
+    ['Taxi to airport', 10000, 20000, ['mobile_money', 'credit_card'], 'Weekend trip'],
   ],
-  Housing: [['Rent', 250, 250, ['bank_transfer'], 'Monthly rent']],
+  Housing: [['Rent', 200000, 200000, ['bank_transfer'], 'Monthly rent']],
   Utilities: [
-    ['Electricity tokens', 10, 25, ['mobile_money']],
-    ['Internet bill', 30, 30, ['bank_transfer']],
-    ['Phone airtime', 5, 10, ['mobile_money']],
+    ['Electricity tokens', 5000, 20000, ['mobile_money']],
+    ['Internet bill', 25000, 25000, ['bank_transfer']],
+    ['Phone airtime', 2000, 5000, ['mobile_money']],
   ],
   Entertainment: [
-    ['Netflix subscription', 10, 10, ['credit_card']],
-    ['Cinema tickets', 8, 20, ['mobile_money', 'cash']],
-    ['Concert ticket', 30, 70, ['credit_card'], 'Kigali Jazz Fusion'],
+    ['Netflix subscription', 12000, 12000, ['credit_card']],
+    ['Cinema tickets', 5000, 10000, ['mobile_money', 'cash']],
+    ['Concert ticket', 20000, 50000, ['credit_card'], 'Kigali Jazz Fusion'],
   ],
   Health: [
-    ['Pharmacy', 5, 30, ['cash', 'mobile_money']],
-    ['Gym membership', 25, 25, ['debit_card']],
+    ['Pharmacy', 3000, 20000, ['cash', 'mobile_money']],
+    ['Gym membership', 30000, 30000, ['debit_card']],
   ],
   Shopping: [
-    ['New shoes', 30, 70, ['credit_card', 'debit_card']],
-    ['Phone case', 8, 15, ['mobile_money']],
-    ['Clothes', 20, 60, ['credit_card']],
+    ['New shoes', 25000, 60000, ['credit_card', 'debit_card']],
+    ['Phone case', 5000, 10000, ['mobile_money']],
+    ['Clothes', 15000, 45000, ['credit_card']],
   ],
   Education: [
-    ['Textbook', 15, 45, ['debit_card']],
-    ['Online course', 10, 30, ['credit_card'], 'Upskilling'],
+    ['Textbook', 10000, 35000, ['debit_card']],
+    ['Online course', 15000, 40000, ['credit_card'], 'Upskilling'],
   ],
 };
 
@@ -74,7 +74,8 @@ const rand = () => {
   return state / 4294967296;
 };
 const pick = (list) => list[Math.floor(rand() * list.length)];
-const between = (min, max) => Math.round((min + rand() * (max - min)) * 100) / 100;
+// Prices rounded to the nearest 100 RWF
+const between = (min, max) => Math.round((min + rand() * (max - min)) / 100) * 100;
 
 const monthKey = (date) => date.toISOString().slice(0, 7);
 const utcDate = (year, month, day) => new Date(Date.UTC(year, month, day));
@@ -147,11 +148,11 @@ async function seedDemo() {
   const thisMonth = monthExpenses(demo._id, categories, year, month, Math.max(1, today), thisMonthCount, everyday);
   await Expense.insertMany([...twoAgo, ...lastMonth, ...thisMonth]);
 
-  const round10 = (n) => Math.ceil(n / 10) * 10;
+  const roundBudget = (n) => Math.ceil(n / 1000) * 1000; // budgets in whole thousands of RWF
   const budgets = [
-    { month: monthKey(utcDate(year, month - 2, 1)), amount: round10(total(twoAgo) * 1.25) }, // within
-    { month: monthKey(utcDate(year, month - 1, 1)), amount: round10(total(lastMonth) * 0.85) }, // over
-    { month: monthKey(utcDate(year, month, 1)), amount: round10(total(thisMonth) / 0.86) }, // approaching
+    { month: monthKey(utcDate(year, month - 2, 1)), amount: roundBudget(total(twoAgo) * 1.4) }, // within (~70% used)
+    { month: monthKey(utcDate(year, month - 1, 1)), amount: roundBudget(total(lastMonth) * 0.85) }, // over
+    { month: monthKey(utcDate(year, month, 1)), amount: roundBudget(total(thisMonth) / 0.86) }, // approaching
   ];
   await Budget.insertMany(budgets.map((b) => ({ ...b, user: demo._id })));
 
@@ -169,7 +170,7 @@ async function seedDemo() {
       ...monthExpenses(user._id, categories, year, month, Math.max(1, today), 3 + index, light),
     ];
     await Expense.insertMany(expenses);
-    await Budget.create({ user: user._id, month: monthKey(now), amount: round10(total(expenses) * 0.9) });
+    await Budget.create({ user: user._id, month: monthKey(now), amount: roundBudget(total(expenses) * 0.9) });
   }
 
   const count = await Expense.countDocuments({ user: demo._id });

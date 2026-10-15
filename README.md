@@ -121,7 +121,7 @@ npm run dev               # http://localhost:5173
 | Variable | Description | Default |
 |---|---|---|
 | `VITE_API_URL` | Base URL of the API | `http://localhost:5000/api` |
-| `VITE_CURRENCY` | ISO currency code used to display amounts | `USD` |
+| `VITE_CURRENCY` | ISO currency code used to display amounts | `RWF` |
 
 ### Scripts
 

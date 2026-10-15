@@ -18,7 +18,12 @@ export default function StatCard({ label, value, icon, caption, color = 'primary
             <Typography variant="body2" color="text.secondary">
               {label}
             </Typography>
-            <Typography variant="h5" component="p" sx={{ mt: 0.5, fontWeight: 700 }} noWrap>
+            {/* Large RWF amounts (e.g. RWF 4,201,600) wrap instead of being cut off */}
+            <Typography
+              variant="h5"
+              component="p"
+              sx={{ mt: 0.5, fontWeight: 700, fontSize: { lg: '1.3rem' }, overflowWrap: 'anywhere' }}
+            >
               {value}
             </Typography>
             {caption && (

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Button, InputAdornment, Stack, TextField } from '@mui/material';
-import { currencySymbol } from '../../utils/format';
+import { amountStep, currencySymbol, roundAmount } from '../../utils/format';
 
 interface BudgetFormProps {
   currentAmount: number | null;
@@ -20,7 +20,7 @@ export default function BudgetForm({ currentAmount, saving, onSave }: BudgetForm
       setError('Enter a budget greater than 0');
       return;
     }
-    onSave(Math.round(amount * 100) / 100);
+    onSave(roundAmount(amount));
   };
 
   return (
@@ -36,7 +36,7 @@ export default function BudgetForm({ currentAmount, saving, onSave }: BudgetForm
         error={Boolean(error)}
         helperText={error}
         slotProps={{
-          htmlInput: { min: 0, step: '0.01', inputMode: 'decimal' },
+          htmlInput: { min: 0, step: amountStep, inputMode: 'decimal' },
           input: { startAdornment: <InputAdornment position="start">{currencySymbol}</InputAdornment> },
         }}
       />

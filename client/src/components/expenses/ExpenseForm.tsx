@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Alert, Box, Button, Grid, InputAdornment, MenuItem, Stack, TextField } from '@mui/material';
-import { currencySymbol, PAYMENT_METHOD_LABELS, todayInputValue, toDateInputValue } from '../../utils/format';
+import { amountStep, currencySymbol, PAYMENT_METHOD_LABELS, roundAmount, todayInputValue, toDateInputValue } from '../../utils/format';
 import { PAYMENT_METHODS, type Category, type Expense, type ExpenseInput, type PaymentMethod } from '../../types';
 
 interface FormValues {
@@ -72,7 +72,7 @@ export default function ExpenseForm({ categories, initial, submitLabel, onSubmit
     try {
       await onSubmit({
         title: values.title.trim(),
-        amount: Math.round(Number(values.amount) * 100) / 100,
+        amount: roundAmount(Number(values.amount)),
         category: values.category,
         date: values.date,
         paymentMethod: values.paymentMethod as PaymentMethod,
@@ -102,7 +102,7 @@ export default function ExpenseForm({ categories, initial, submitLabel, onSubmit
             required
             {...field('amount')}
             slotProps={{
-              htmlInput: { min: 0, step: '0.01', inputMode: 'decimal' },
+              htmlInput: { min: 0, step: amountStep, inputMode: 'decimal' },
               input: { startAdornment: <InputAdornment position="start">{currencySymbol}</InputAdornment> },
             }}
           />

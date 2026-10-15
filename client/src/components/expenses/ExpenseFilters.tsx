@@ -29,7 +29,7 @@ import {
   setSort,
 } from '../../store/slices/filtersSlice';
 import { useDebouncedValue } from '../../hooks/useDebouncedValue';
-import { PAYMENT_METHOD_LABELS } from '../../utils/format';
+import { amountStep, PAYMENT_METHOD_LABELS } from '../../utils/format';
 import { PAYMENT_METHODS, type Category, type PaymentMethod, type SortField, type SortOrder } from '../../types';
 
 /** MUI multi-selects report their value as string[] (or a comma string on autofill). */
@@ -210,7 +210,7 @@ export default function ExpenseFilters({ categories }: { categories: Category[] 
                 value={filters.minAmount}
                 onChange={(e) => dispatch(setAmountRange({ minAmount: e.target.value }))}
                 error={Boolean(amountError)}
-                slotProps={{ htmlInput: { min: 0, step: '0.01' } }}
+                slotProps={{ htmlInput: { min: 0, step: amountStep } }}
               />
             </Grid>
             <Grid size={{ xs: 6, md: 1.5 }}>
@@ -221,7 +221,7 @@ export default function ExpenseFilters({ categories }: { categories: Category[] 
                 onChange={(e) => dispatch(setAmountRange({ maxAmount: e.target.value }))}
                 error={Boolean(amountError)}
                 helperText={amountError}
-                slotProps={{ htmlInput: { min: 0, step: '0.01' } }}
+                slotProps={{ htmlInput: { min: 0, step: amountStep } }}
               />
             </Grid>
           </Grid>

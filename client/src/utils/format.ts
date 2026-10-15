@@ -1,12 +1,24 @@
 import type { BudgetStatus, PaymentMethod } from '../types';
 
-const CURRENCY = import.meta.env.VITE_CURRENCY ?? 'USD';
+const CURRENCY = import.meta.env.VITE_CURRENCY ?? 'RWF';
 
+// Decimal places come from the currency itself: 0 for RWF, 2 for USD
 const currencyFormatter = new Intl.NumberFormat(undefined, {
   style: 'currency',
   currency: CURRENCY,
-  maximumFractionDigits: 2,
 });
+
+/** Number of decimal places the configured currency uses */
+export const currencyDecimals = currencyFormatter.resolvedOptions().maximumFractionDigits ?? 2;
+
+/** `step` attribute for amount inputs, e.g. "1" for RWF or "0.01" for USD */
+export const amountStep = currencyDecimals === 0 ? '1' : (1 / 10 ** currencyDecimals).toFixed(currencyDecimals);
+
+/** Rounds an entered amount to the currency's smallest unit */
+export const roundAmount = (value: number) => {
+  const factor = 10 ** currencyDecimals;
+  return Math.round(value * factor) / factor;
+};
 
 export const formatCurrency = (value: number) => currencyFormatter.format(value);
 

@@ -143,7 +143,8 @@ async function seedDemo() {
     Shopping: 5,
     Entertainment: 4,
   });
-  const thisMonth = monthExpenses(demo._id, categories, year, month, Math.max(1, today), Math.max(6, today * 1.2), everyday);
+  const thisMonthCount = Math.max(6, Math.min(10, Math.ceil(today * 1.2)));
+  const thisMonth = monthExpenses(demo._id, categories, year, month, Math.max(1, today), thisMonthCount, everyday);
   await Expense.insertMany([...twoAgo, ...lastMonth, ...thisMonth]);
 
   const round10 = (n) => Math.ceil(n / 10) * 10;

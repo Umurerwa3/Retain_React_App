@@ -10,6 +10,9 @@ services:
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
+      # Vite 8 needs Node 20.19+; pin both services to the same version
+      - key: NODE_VERSION
+        value: "22"
       - key: NODE_ENV
         value: production
       - key: MONGO_URI
@@ -20,9 +23,13 @@ services:
         value: 7d
       - key: CLIENT_URL
         sync: false
+      - key: ADMIN_NAME
+        value: Retain Admin
       - key: ADMIN_EMAIL
         sync: false
       - key: ADMIN_PASSWORD
+        sync: false
+      - key: DEMO_PASSWORD
         sync: false
 
   - type: web
@@ -37,6 +44,8 @@ services:
         source: /*
         destination: /index.html
     envVars:
+      - key: NODE_VERSION
+        value: "22"
       - key: VITE_API_URL
         sync: false
       - key: VITE_CURRENCY

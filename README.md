@@ -6,6 +6,7 @@ Retain helps people record their everyday expenses, set a monthly budget and see
 
 | | URL |
 |---|---|
+| **Demo video** | https://canva.link/0xugqmvo3oihnkm |
 | **Web app** | https://retain-client.onrender.com |
 | **API** | https://retain-api-h8ii.onrender.com/api (health check: [`/api/health`](https://retain-api-h8ii.onrender.com/api/health)) |
 
